@@ -408,6 +408,8 @@ public abstract class SocketBase extends Own implements IPollEvents, Pipe.IPipeE
                 // continue
             case epgm:
                 // continue
+	    case udp:
+		// continue
             case norm:
                 //  For convenience's sake, bind can be used interchangeable with
                 //  connect for PGM, EPGM and NORM transports.
