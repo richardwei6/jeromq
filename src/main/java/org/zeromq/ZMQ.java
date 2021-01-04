@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.zeromq.proto.ZPicture;
@@ -2181,6 +2182,30 @@ public class ZMQ
             return setSocketOpt(zmq.ZMQ.ZMQ_UNSUBSCRIBE, topic);
         }
 
+
+        /**
+         * Joins a group.
+         * Opposite action is {@link Socket#leave(String)}
+         * @param group the name of the group to join. Limited to 16 characters.
+         * @return true if the group was no already joined, otherwise false.
+         */
+        public boolean join(String group) {
+            assert ("DISH".equals(base.typeString())): "Only DISH sockets can join a group";
+            return base.join(group);
+        }
+
+        /**
+         * Leaves a group.
+         * Opposite action is {@link Socket#join(String)}
+         * @param group the name of the group to leave. Limited to 16 characters.
+         * @return false if the group was not joined before, otherwise true.
+         */
+        public boolean leave(String group) {
+            assert ("DISH".equals(base.typeString())): "Only DISH sockets can leave a group";
+            return base.leave(group);
+        }
+
+
         /**
          * Set custom Encoder
          *
@@ -3075,7 +3100,7 @@ public class ZMQ
         public int bindToRandomPort(String addr, int min, int max)
         {
             int port;
-            Random rand = new Random();
+            final Random rand = ThreadLocalRandom.current();
             //            int port = min;
             //            while (port <= max) {
             for (int i = 0; i < 100; i++) { // hardcoded to 100 tries. should this be parametrised
